@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.gb.weather.R
 import com.gb.weather.databinding.FragmentMainBinding
+import com.gb.weather.viewmodel.AppState
 
 class MainFragment : Fragment() {
 
@@ -32,11 +33,11 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.sameButton.setOnClickListener(){}
+        //binding.sameButton.setOnClickListener() {}
 
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        val observer = object : Observer<Any> {
-            override fun onChanged(data: Any) {
+        val observer = object : Observer<AppState> {
+            override fun onChanged(data: AppState) {
                 renderData(data)
             }
         }
@@ -45,8 +46,24 @@ class MainFragment : Fragment() {
         viewModel.getWeather()
     }
 
-    private fun renderData(data: Any) {
-        Toast.makeText(requireContext(), "Bang", Toast.LENGTH_SHORT).show()
+    private fun renderData(data: AppState) {
+        when(data){
+            is AppState.Error -> {
+                binding.loadingLayout.visibility = View.GONE
+                binding.message.text = "Что-то не загрузилось ${data.error}"
+            }
+            is AppState.Loading -> {
+                binding.loadingLayout.visibility = View.VISIBLE
+
+            }
+            is AppState.Success -> {
+                binding.loadingLayout.visibility = View.GONE
+                binding.message.text = "Что-то произошло"
+                //Toast.makeText(requireContext(), "Bang", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
     }
 
     companion object {
