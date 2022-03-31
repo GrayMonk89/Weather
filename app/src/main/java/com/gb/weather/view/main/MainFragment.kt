@@ -9,17 +9,33 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.gb.weather.R
+import com.gb.weather.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    lateinit var binding: FragmentMainBinding
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //binding
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentMainBinding.inflate(inflater, container, false)
+        //return inflater.inflate(R.layout.fragment_main, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.sameButton.setOnClickListener(){}
+
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        val observer = object:Observer<Any> {
+        val observer = object : Observer<Any> {
             override fun onChanged(data: Any) {
                 renderData(data)
             }
@@ -29,15 +45,8 @@ class MainFragment : Fragment() {
         viewModel.getWeather()
     }
 
-    private fun renderData(data:Any){
-        Toast.makeText(requireContext(),"Bang", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+    private fun renderData(data: Any) {
+        Toast.makeText(requireContext(), "Bang", Toast.LENGTH_SHORT).show()
     }
 
     companion object {
