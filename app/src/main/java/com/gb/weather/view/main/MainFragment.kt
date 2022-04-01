@@ -1,10 +1,12 @@
 package com.gb.weather.view.main
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.gb.weather.databinding.FragmentMainBinding
@@ -13,7 +15,13 @@ import com.google.android.material.snackbar.Snackbar
 
 class MainFragment : Fragment() {
 
-    lateinit var binding: FragmentMainBinding
+    private lateinit var binding: FragmentMainBinding
+
+    val SOURCE_LOCAL = 1
+    val SOURCE_SERVER = 2
+
+    private val SELECTION_KEY_RG = "Select RadioButton"
+    val SELECTION_KEY_RG_SOURCE = "Selected RadioButton"
 
     override fun onDestroy() {
         super.onDestroy()
@@ -35,14 +43,25 @@ class MainFragment : Fragment() {
         //binding.sameButton.setOnClickListener() {}
 
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        val observer = object : Observer<AppState> {
-            override fun onChanged(data: AppState) {
-                renderData(data, viewModel)
-            }
-        }
+        val observer = Observer<AppState> { data -> renderData(data, viewModel) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
 
         viewModel.getWeather()
+    }
+
+
+
+    private fun setCurrentSource(currentSource:Int){
+        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences(SELECTION_KEY_RG, Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putInt(SELECTION_KEY_RG_SOURCE, currentSource)
+        editor.apply()
+    }
+
+
+    private fun getCurrentSource():Int{
+        val sharedPreference:SharedPreferences = requireContext().getSharedPreferences(SELECTION_KEY_RG, Context.MODE_PRIVATE)
+        return sharedPreference.getInt(SELECTION_KEY_RG_SOURCE, SOURCE_LOCAL)
     }
 
     private fun renderData(data: AppState, viewModel: MainViewModel) = when(data){
