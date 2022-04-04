@@ -3,7 +3,7 @@ package com.gb.weather.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.gb.weather.R
-import com.gb.weather.view.main.MainFragment
+import com.gb.weather.view.main.WeatherListFragment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().replace(
                 R.id.mainContainer,
-                MainFragment.newInstance()
+                WeatherListFragment.newInstance()
             ).commit()
         }
     }

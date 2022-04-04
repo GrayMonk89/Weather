@@ -9,13 +9,23 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.gb.weather.databinding.FragmentMainBinding
+import com.gb.weather.databinding.FragmentWeatherListBinding
 import com.gb.weather.viewmodel.AppState
+import com.gb.weather.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 
-class MainFragment : Fragment() {
+class WeatherListFragment : Fragment() {
 
-    private lateinit var binding: FragmentMainBinding
+    private var _binding: FragmentWeatherListBinding? = null
+    private val binding: FragmentWeatherListBinding
+        get(){
+            return _binding!!
+        }
+//    private val binding: FragmentWeatherListBinding
+//    get(){
+//        return _binding!!
+//    }
+
 
     val SOURCE_LOCAL = 1
     val SOURCE_SERVER = 2
@@ -25,14 +35,14 @@ class MainFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        //binding
+        _binding = null
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentMainBinding.inflate(inflater, container, false)
+        _binding = FragmentWeatherListBinding.inflate(inflater, container, false)
         //return inflater.inflate(R.layout.fragment_main, container, false)
         return binding.root
     }
@@ -46,30 +56,36 @@ class MainFragment : Fragment() {
         val observer = Observer<AppState> { data -> renderData(data, viewModel) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
 
-        viewModel.getWeather()
+        //viewModel.getWeather()
     }
 
 
-
-    private fun setCurrentSource(currentSource:Int){
-        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences(SELECTION_KEY_RG, Context.MODE_PRIVATE)
+    private fun setCurrentSource(currentSource: Int) {
+        val sharedPreferences: SharedPreferences =
+            requireContext().getSharedPreferences(SELECTION_KEY_RG, Context.MODE_PRIVATE)
         val editor: SharedPreferences.Editor = sharedPreferences.edit()
         editor.putInt(SELECTION_KEY_RG_SOURCE, currentSource)
         editor.apply()
     }
 
 
-    private fun getCurrentSource():Int{
-        val sharedPreference:SharedPreferences = requireContext().getSharedPreferences(SELECTION_KEY_RG, Context.MODE_PRIVATE)
+    private fun getCurrentSource(): Int {
+        val sharedPreference: SharedPreferences =
+            requireContext().getSharedPreferences(SELECTION_KEY_RG, Context.MODE_PRIVATE)
         return sharedPreference.getInt(SELECTION_KEY_RG_SOURCE, SOURCE_LOCAL)
     }
 
-    private fun renderData(data: AppState, viewModel: MainViewModel) = when(data){
+    private fun renderData(data: AppState, viewModel: MainViewModel) = when (data) {
         is AppState.Error -> {
             binding.loadingLayout.visibility = View.GONE
             //binding.message.text = "Что-то не загрузилось ${data.error}"
-            val mySnack:Snackbar =  Snackbar.make(binding.mainView,"Что-то не загрузилось ${data.error}",Snackbar.LENGTH_LONG)
-                mySnack.setAction("Попробовать еще?", View.OnClickListener { viewModel.getWeather() }).show()
+/*            val mySnack: Snackbar = Snackbar.make(
+                binding.root,
+                "Что-то не загрузилось ${data.error}",
+                Snackbar.LENGTH_LONG
+            )
+            mySnack.setAction("Попробовать еще?", View.OnClickListener { viewModel.getWeather() })
+                .show()*/
         }
         is AppState.Loading -> {
             binding.loadingLayout.visibility = View.VISIBLE
@@ -77,18 +93,19 @@ class MainFragment : Fragment() {
         }
         is AppState.Success -> {
 
-            binding.loadingLayout.visibility = View.GONE
+/*            binding.loadingLayout.visibility = View.GONE
             binding.cityName.text = data.weatherData.city.cityName
             binding.temperatureValue.text = data.weatherData.temperature.toString()
             binding.feelsLikeValue.text = data.weatherData.feelsLike.toString()
-            binding.cityCoordinates.text = "lat: ${data.weatherData.city.lat} lon: ${data.weatherData.city.lon}"
-            Snackbar.make(binding.mainView,"Что-то загрузилось!",Snackbar.LENGTH_LONG).show()
+            binding.cityCoordinates.text =
+                "lat: ${data.weatherData.city.lat} lon: ${data.weatherData.city.lon}"
+            Snackbar.make(binding.mainView, "Что-то загрузилось!", Snackbar.LENGTH_LONG).show()*/
         }
 
     }
 
     companion object {
         @JvmStatic
-        fun newInstance() = MainFragment()
+        fun newInstance() = WeatherListFragment()
     }
 }
