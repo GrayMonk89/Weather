@@ -1,7 +1,5 @@
 package com.gb.weather.view.weatherlist
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,23 +15,17 @@ import com.gb.weather.utils.KEY_BUNDLE_WEATHER
 import com.gb.weather.view.details.DetailsFragment
 import com.gb.weather.viewmodel.AppState
 import com.gb.weather.viewmodel.MainViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class WeatherListFragment : Fragment(), OnItemListClickListener {
+
+    private val adapter = WeatherListAdapter(this)
 
     private var _binding: FragmentWeatherListBinding? = null
     private val binding: FragmentWeatherListBinding
         get() {
             return _binding!!
         }
-
-    val adapter = WeatherListAdapter(this)
-
-
-    val SOURCE_LOCAL = 1
-    val SOURCE_SERVER = 2
-
-    private val SELECTION_KEY_RG = "Select RadioButton"
-    val SELECTION_KEY_RG_SOURCE = "Selected RadioButton"
 
     override fun onDestroy() {
         super.onDestroy()
@@ -45,7 +37,6 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentWeatherListBinding.inflate(inflater, container, false)
-        //return inflater.inflate(R.layout.fragment_main, container, false)
         return binding.root
     }
 
@@ -53,69 +44,61 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //binding.sameButton.setOnClickListener() {}
         binding.listRecyclerView.adapter = adapter
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        val observer = Observer<AppState> { data -> renderData(data, viewModel) }
+        val observer = object : Observer<AppState> {
+            override fun onChanged(data: AppState) {
+                renderData(data, viewModel)
+            }
+        }
         viewModel.getData().observe(viewLifecycleOwner, observer)
 
         binding.floatingActionButton.setOnClickListener {
-            fromHere = !fromHere
-            if (fromHere) {
-                viewModel.getWeatherFromHere()
-                binding.floatingActionButton.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_russia))
-            } else {
-                viewModel.getWeatherNotFromHere()
-                binding.floatingActionButton.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_earth))
-            }
+            redraw(viewModel)
         }
         viewModel.getWeatherFromHere()
     }
 
-
-    private fun setCurrentSource(currentSource: Int) {
-        val sharedPreferences: SharedPreferences =
-            requireContext().getSharedPreferences(SELECTION_KEY_RG, Context.MODE_PRIVATE)
-        val editor: SharedPreferences.Editor = sharedPreferences.edit()
-        editor.putInt(SELECTION_KEY_RG_SOURCE, currentSource)
-        editor.apply()
-    }
-
-
-    private fun getCurrentSource(): Int {
-        val sharedPreference: SharedPreferences =
-            requireContext().getSharedPreferences(SELECTION_KEY_RG, Context.MODE_PRIVATE)
-        return sharedPreference.getInt(SELECTION_KEY_RG_SOURCE, SOURCE_LOCAL)
+    private fun redraw(viewModel: MainViewModel) {
+        fromHere = !fromHere
+        if (fromHere) {
+            viewModel.getWeatherFromHere()
+            binding.floatingActionButton.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_russia
+                )
+            )
+        } else {
+            viewModel.getWeatherNotFromHere()
+            binding.floatingActionButton.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_earth
+                )
+            )
+        }
     }
 
     private fun renderData(data: AppState, viewModel: MainViewModel) = when (data) {//
         is AppState.Error -> {
             binding.loadingLayout.visibility = View.GONE
-            //binding.message.text = "Что-то не загрузилось ${data.error}"
-/*            val mySnack: Snackbar = Snackbar.make(
+            val mySnack: Snackbar = Snackbar.make(
                 binding.root,
-                "Что-то не загрузилось ${data.error}",
+                "Что-то не загрузилось ${data.getError()}",
                 Snackbar.LENGTH_LONG
             )
-            mySnack.setAction("Попробовать еще?", View.OnClickListener { viewModel.getWeather() })
-                .show()*/
+            mySnack.setAction("Попробовать еще?", View.OnClickListener {
+                redraw(viewModel)
+            })
+                .show()
         }
         is AppState.Loading -> {
             binding.loadingLayout.visibility = View.VISIBLE
-
         }
         is AppState.Success -> {
-
             binding.loadingLayout.visibility = View.GONE
-            adapter.setData(data.weatherListData)
-
-/*            binding.loadingLayout.visibility = View.GONE
-            binding.cityName.text = data.weatherData.city.cityName
-            binding.temperatureValue.text = data.weatherData.temperature.toString()
-            binding.feelsLikeValue.text = data.weatherData.feelsLike.toString()
-            binding.cityCoordinates.text =
-                "lat: ${data.weatherData.city.lat} lon: ${data.weatherData.city.lon}"
-            Snackbar.make(binding.mainView, "Что-то загрузилось!", Snackbar.LENGTH_LONG).show()*/
+            adapter.setData(data.getWeatherListData())//weatherListData
         }
 
     }

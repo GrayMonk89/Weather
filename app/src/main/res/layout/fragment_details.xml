@@ -9,30 +9,6 @@
     android:focusable="true"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="?actionBarSize"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/sourceSP"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Загрузить из локального репозитория" />
-
-            <RadioButton
-                android:id="@+id/sourceGF"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Загрузить с сервера" />
-        </RadioGroup>
-    </FrameLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainView"
         android:layout_width="match_parent"
@@ -105,21 +81,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/feelsLikeLabel"
             tools:text="-23" />
+
+        <FrameLayout
+            android:id="@+id/loadingLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:visibility="gone"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="112dp"
+            tools:visibility="visible">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <FrameLayout
-        android:id="@+id/loadingLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
 </FrameLayout>

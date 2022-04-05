@@ -29,7 +29,7 @@ class DetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
-        //return inflater.inflate(R.layout.fragment_main, container, false)
+
         return binding.root
     }
 
