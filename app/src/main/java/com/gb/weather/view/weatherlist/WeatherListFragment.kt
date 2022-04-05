@@ -1,4 +1,4 @@
-package com.gb.weather.view.main
+package com.gb.weather.view.weatherlist
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -6,25 +6,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.gb.weather.R
 import com.gb.weather.databinding.FragmentWeatherListBinding
+import com.gb.weather.repository.Weather
+import com.gb.weather.utils.KEY_BUNDLE_WEATHER
+import com.gb.weather.view.details.DetailsFragment
 import com.gb.weather.viewmodel.AppState
 import com.gb.weather.viewmodel.MainViewModel
-import com.google.android.material.snackbar.Snackbar
 
-class WeatherListFragment : Fragment() {
+class WeatherListFragment : Fragment(), OnItemListClickListener {
 
     private var _binding: FragmentWeatherListBinding? = null
     private val binding: FragmentWeatherListBinding
-        get(){
+        get() {
             return _binding!!
         }
-//    private val binding: FragmentWeatherListBinding
-//    get(){
-//        return _binding!!
-//    }
+
+    val adapter = WeatherListAdapter(this)
 
 
     val SOURCE_LOCAL = 1
@@ -47,16 +49,27 @@ class WeatherListFragment : Fragment() {
         return binding.root
     }
 
+    private var fromHere = true
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         //binding.sameButton.setOnClickListener() {}
-
+        binding.listRecyclerView.adapter = adapter
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val observer = Observer<AppState> { data -> renderData(data, viewModel) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
 
-        //viewModel.getWeather()
+        binding.floatingActionButton.setOnClickListener {
+            fromHere = !fromHere
+            if (fromHere) {
+                viewModel.getWeatherFromHere()
+                binding.floatingActionButton.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_russia))
+            } else {
+                viewModel.getWeatherNotFromHere()
+                binding.floatingActionButton.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_earth))
+            }
+        }
+        viewModel.getWeatherFromHere()
     }
 
 
@@ -75,7 +88,7 @@ class WeatherListFragment : Fragment() {
         return sharedPreference.getInt(SELECTION_KEY_RG_SOURCE, SOURCE_LOCAL)
     }
 
-    private fun renderData(data: AppState, viewModel: MainViewModel) = when (data) {
+    private fun renderData(data: AppState, viewModel: MainViewModel) = when (data) {//
         is AppState.Error -> {
             binding.loadingLayout.visibility = View.GONE
             //binding.message.text = "Что-то не загрузилось ${data.error}"
@@ -93,6 +106,9 @@ class WeatherListFragment : Fragment() {
         }
         is AppState.Success -> {
 
+            binding.loadingLayout.visibility = View.GONE
+            adapter.setData(data.weatherListData)
+
 /*            binding.loadingLayout.visibility = View.GONE
             binding.cityName.text = data.weatherData.city.cityName
             binding.temperatureValue.text = data.weatherData.temperature.toString()
@@ -107,5 +123,14 @@ class WeatherListFragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance() = WeatherListFragment()
+    }
+
+    override fun onItemClick(weather: Weather) {
+        val bundle = Bundle()
+        bundle.putParcelable(KEY_BUNDLE_WEATHER, weather)
+        requireActivity().supportFragmentManager.beginTransaction().add(
+            R.id.mainContainer,
+            DetailsFragment.newInstance(bundle)
+        ).addToBackStack("").commit()
     }
 }
