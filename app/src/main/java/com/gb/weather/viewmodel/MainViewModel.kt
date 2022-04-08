@@ -23,7 +23,6 @@ class MainViewModel(
     private fun getWeather(notFromHere: Boolean) {
         Thread {
             liveData.postValue(AppState.Loading(0))
-
             if ((0..10).random() > 5) {
                 val answer =
                     if (notFromHere)

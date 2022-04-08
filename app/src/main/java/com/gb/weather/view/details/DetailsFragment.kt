@@ -35,28 +35,36 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val weather: Weather = requireArguments().getParcelable<Weather>(KEY_BUNDLE_WEATHER)!!//let
+        val weather = requireArguments().getParcelable<Weather>(KEY_BUNDLE_WEATHER)!! //let
         renderData(weather)
+//        val weather: Weather = requireArguments().getParcelable<Weather>(KEY_BUNDLE_WEATHER)!!//let
+//        renderData(weather)
     }
 
 
     private fun renderData(weather: Weather) {
+        with(binding) {
+            loadingLayout.visibility = View.GONE
+            cityName.text = weather.city.cityName
+            temperatureValue.text = weather.temperature.toString()
+            feelsLikeValue.text = weather.feelsLike.toString()
+            cityCoordinates.text = "lat: ${weather.city.lat} lon: ${weather.city.lon}"
+        }
+        showMessage("Что-то загрузилось!")
+    }
 
-        binding.loadingLayout.visibility = View.GONE
-        binding.cityName.text = weather.city.cityName
-        binding.temperatureValue.text = weather.temperature.toString()
-        binding.feelsLikeValue.text = weather.feelsLike.toString()
-        binding.cityCoordinates.text = "lat: ${weather.city.lat} lon: ${weather.city.lon}"
-        Snackbar.make(binding.mainView, "Что-то загрузилось!", Snackbar.LENGTH_LONG).show()
+    private fun showMessage(msg: String) {
+        Snackbar.make(binding.mainView, msg, Snackbar.LENGTH_LONG).show()
     }
 
 
     companion object {
         @JvmStatic
         fun newInstance(bundle: Bundle): DetailsFragment {
-            val fragment = DetailsFragment()
-            fragment.arguments = bundle
-            return fragment
+//            val fragment = DetailsFragment()
+//            fragment.arguments = bundle
+//            return fragment
+            return DetailsFragment().apply { arguments = bundle }
         }
     }
 }

@@ -44,7 +44,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.listRecyclerView.adapter = adapter
+        initRecycler()
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val observer = Observer<AppState> { data -> renderData(data, viewModel) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
@@ -53,6 +53,10 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
             redraw(viewModel)
         }
         viewModel.getWeatherFromHere()
+    }
+
+    private fun initRecycler() {
+        binding.listRecyclerView.also { it.adapter = adapter }
     }
 
     private fun redraw(viewModel: MainViewModel) {
@@ -78,25 +82,29 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
 
     private fun renderData(data: AppState, viewModel: MainViewModel) = when (data) {//
         is AppState.Error -> {
-            binding.loadingLayout.visibility = View.GONE
-            val mySnack: Snackbar = Snackbar.make(
-                binding.root,
-                "Что-то не загрузилось ${data.getError()}",
-                Snackbar.LENGTH_LONG
-            )
-            mySnack.setAction("Попробовать еще?", View.OnClickListener {
-                redraw(viewModel)
-            })
-                .show()
+            binding.loadingLayout.apply{ visibility = View.GONE }
+            showMessage(data,viewModel)
         }
         is AppState.Loading -> {
-            binding.loadingLayout.visibility = View.VISIBLE
+            binding.loadingLayout.apply{visibility = View.VISIBLE}
         }
         is AppState.Success -> {
-            binding.loadingLayout.visibility = View.GONE
+            binding.loadingLayout.apply{ visibility = View.GONE }
             adapter.setData(data.getWeatherListData())//weatherListData
         }
 
+    }
+
+    private fun showMessage(msg: AppState, viewModel: MainViewModel){
+        val mySnack: Snackbar = Snackbar.make(
+            binding.root,
+            "Что-то не загрузилось \n${msg.toString()}",
+            Snackbar.LENGTH_LONG
+        )
+        mySnack.setAction("Попробовать еще?", View.OnClickListener {
+            redraw(viewModel)
+        })
+            .show()
     }
 
     companion object {
@@ -106,10 +114,9 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
 
     override fun onItemClick(weather: Weather) {
         val bundle = Bundle()
-        bundle.putParcelable(KEY_BUNDLE_WEATHER, weather)
         requireActivity().supportFragmentManager.beginTransaction().add(
             R.id.mainContainer,
-            DetailsFragment.newInstance(bundle)
+            DetailsFragment.newInstance(bundle.apply { putParcelable(KEY_BUNDLE_WEATHER, weather) })
         ).addToBackStack("").commit()
     }
 }
