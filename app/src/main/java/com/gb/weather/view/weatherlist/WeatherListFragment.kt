@@ -46,11 +46,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
 
         binding.listRecyclerView.adapter = adapter
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        val observer = object : Observer<AppState> {
-            override fun onChanged(data: AppState) {
-                renderData(data, viewModel)
-            }
-        }
+        val observer = Observer<AppState> { data -> renderData(data, viewModel) }
         viewModel.getData().observe(viewLifecycleOwner, observer)
 
         binding.floatingActionButton.setOnClickListener {
