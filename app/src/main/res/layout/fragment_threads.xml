@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/mainContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_15_dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/calculationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="calculate"
+                android:textSize="@dimen/calculate_text_size" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editTextRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:ems="1"
+                android:gravity="center_horizontal"
+                android:inputType="number"
+                android:text="3"
+                android:textSize="@dimen/feels_like_text_size" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:gravity="center_horizontal"
+                tools:text="0"
+                android:textSize="@dimen/feels_like_text_size" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
