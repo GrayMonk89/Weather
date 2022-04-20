@@ -2,33 +2,74 @@ package com.gb.weather.repository
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import com.gb.weather.BuildConfig
 import com.gb.weather.repository.dto.WeatherDTO
+import com.gb.weather.utils.CLIENT_SIDE
+import com.gb.weather.utils.LOG_KEY
+import com.gb.weather.utils.RESPONSEOK
+import com.gb.weather.utils.SERVER_SIDE
+import com.gb.weather.viewmodel.ResponseState
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.net.HttpURLConnection
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
-class WeatherLoader(private val onServerResponseListener: OnServerResponse) {
+class WeatherLoader(
+    private val onServerResponseListener: OnServerResponse,
+    private val onErrorListener: OnServerResponseListener
+) {
     fun loadWeather(lat: Double, lon: Double) {
-        val urlText = "https://api.weather.yandex.ru/v2/informers?lat=$lat&lon=$lon"
+        //val urlText = "https://api.weather.yandex.ru/v2/informers?lat=$lat&lon=$lon"
+        val urlText = "http://212.86.114.27/v2/informers?lat=$lat&lon=$lon"
         val uri = URL(urlText)
-        val urlConnection: HttpsURLConnection = (uri.openConnection() as HttpsURLConnection).apply {
+        //val urlConnection: HttpsURLConnection = (uri.openConnection() as HttpsURLConnection).apply {
+        val urlConnection: HttpURLConnection = (uri.openConnection() as HttpURLConnection).apply {
             connectTimeout = 1000
             readTimeout = 1000
-            addRequestProperty("X-Yandex-API-Key","5f7a5661-e994-4c0e-89ee-6f09cdbf0574")
+            addRequestProperty(
+                "X-Yandex-API-Key",
+                BuildConfig.WEATHER_API_KEY
+            )
         }
 
         Thread {
-            val headers = urlConnection.headerFields
-            val responseCode = urlConnection.responseCode
-            val buffer = BufferedReader(InputStreamReader(urlConnection.inputStream))
-            val weatherDTO: WeatherDTO = Gson().fromJson(
-                buffer,
-                WeatherDTO::class.java
-            )
-            Handler(Looper.getMainLooper()).post {
-                onServerResponseListener.onResponse(weatherDTO)
+            try {
+                val headers = urlConnection.headerFields
+                val responseCode = urlConnection.responseCode
+                val responseMessage = urlConnection.responseMessage
+
+                Log.d(LOG_KEY, "responseCode: $responseCode   responseMessage: $responseMessage")
+
+                if (responseCode in SERVER_SIDE) {
+
+                    onErrorListener.onError(ResponseState.ErrorOnServerSide("responseCode: $responseCode   responseMessage: $responseMessage"))
+
+                } else if (responseCode in CLIENT_SIDE) {
+
+                    onErrorListener.onError(ResponseState.ErrorOnClientSide("responseCode: $responseCode   responseMessage: $responseMessage"))
+
+                } else if (responseCode in RESPONSEOK) {
+                    val buffer = BufferedReader(InputStreamReader(urlConnection.inputStream))
+                    val weatherDTO: WeatherDTO = Gson().fromJson(
+                        buffer,
+                        WeatherDTO::class.java
+                    )
+                    Handler(Looper.getMainLooper()).post {
+                        onServerResponseListener.onResponse(weatherDTO)
+                    }
+                }
+
+
+            } catch (e: JsonSyntaxException) {
+
+                onErrorListener.onError(ResponseState.ErrorInJSONConversion(e.toString()))
+            } finally {
+                urlConnection.disconnect()
             }
         }.start()
 

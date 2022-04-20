@@ -50,7 +50,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         viewModel.getData().observe(viewLifecycleOwner, observer)
 
         binding.floatingActionButton.setOnClickListener {
-            redraw(viewModel)
+            redraw(viewModel,true)
         }
         viewModel.getWeatherFromHere()
     }
@@ -59,8 +59,11 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         binding.listRecyclerView.also { it.adapter = adapter }
     }
 
-    private fun redraw(viewModel: MainViewModel) {
-        fromHere = !fromHere
+    private fun redraw(viewModel: MainViewModel, redraw:Boolean) {
+
+        if (redraw) {
+            fromHere = !fromHere
+        }
         if (fromHere) {
             viewModel.getWeatherFromHere()
             binding.floatingActionButton.setImageDrawable(
@@ -102,7 +105,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
             Snackbar.LENGTH_LONG
         )
         mySnack.setAction("Попробовать еще?", View.OnClickListener {
-            redraw(viewModel)
+            redraw(viewModel,false)
         })
             .show()
     }
