@@ -5,10 +5,7 @@ import android.os.Looper
 import android.util.Log
 import com.gb.weather.BuildConfig
 import com.gb.weather.repository.dto.WeatherDTO
-import com.gb.weather.utils.CLIENT_SIDE
-import com.gb.weather.utils.LOG_KEY
-import com.gb.weather.utils.RESPONSEOK
-import com.gb.weather.utils.SERVER_SIDE
+import com.gb.weather.utils.*
 import com.gb.weather.viewmodel.ResponseState
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -24,15 +21,15 @@ class WeatherLoader(
     private val onErrorListener: OnServerResponseListener
 ) {
     fun loadWeather(lat: Double, lon: Double) {
-        //val urlText = "https://api.weather.yandex.ru/v2/informers?lat=$lat&lon=$lon"
-        val urlText = "http://212.86.114.27/v2/informers?lat=$lat&lon=$lon"
+        //val urlText = $YANDEX_DOMAIN_PART$YANDEX_ENDPOINT$LAT_KEY$=lat$LON_KEY=$lon
+        val urlText = "$YANDEX_DOMAIN_HARD_MODE_PART$YANDEX_ENDPOINT$LAT_KEY=$lat&$LON_KEY=$lon"
         val uri = URL(urlText)
         //val urlConnection: HttpsURLConnection = (uri.openConnection() as HttpsURLConnection).apply {
         val urlConnection: HttpURLConnection = (uri.openConnection() as HttpURLConnection).apply {
-            connectTimeout = 1000
-            readTimeout = 1000
+            connectTimeout = CONNECT_TIMEOUT
+            readTimeout = READ_TIMEOUT
             addRequestProperty(
-                "X-Yandex-API-Key",
+                YANDEX_API_KEY,
                 BuildConfig.WEATHER_API_KEY
             )
         }

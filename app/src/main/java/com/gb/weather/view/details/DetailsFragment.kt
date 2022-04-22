@@ -1,18 +1,23 @@
 package com.gb.weather.view.details
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.gb.weather.databinding.FragmentDetailsBinding
 import com.gb.weather.repository.OnServerResponse
 import com.gb.weather.repository.OnServerResponseListener
 import com.gb.weather.repository.Weather
 import com.gb.weather.repository.WeatherLoader
 import com.gb.weather.repository.dto.WeatherDTO
-import com.gb.weather.utils.BUNDLE_WEATHER_KEY
-import com.gb.weather.utils.showSnackBar
+import com.gb.weather.utils.*
 import com.gb.weather.viewmodel.ResponseState
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_details.*
@@ -29,6 +34,17 @@ class DetailsFragment : Fragment(), OnServerResponse, OnServerResponseListener {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        requireContext().unregisterReceiver(receiver)
+    }
+
+    private val receiver = object  : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            intent.let { intent ->
+                intent.getParcelableExtra<WeatherDTO>(SERVICE_BROADCAST_WEATHER_KEY)?.let{
+                    onResponse(it)
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -36,20 +52,29 @@ class DetailsFragment : Fragment(), OnServerResponse, OnServerResponseListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
-
         return binding.root
     }
+
+
 
     lateinit var currentCityName: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireContext().registerReceiver(receiver, IntentFilter(BROADCAST_RECEIVER_CHANNEL_WEATHER_KEY))
+
         requireArguments().getParcelable<Weather>(BUNDLE_WEATHER_KEY)?.let {
             currentCityName = it.city.cityName
-            WeatherLoader(this@DetailsFragment, this@DetailsFragment).loadWeather(
+/*            WeatherLoader(this@DetailsFragment, this@DetailsFragment).loadWeather(
                 it.city.lat,
                 it.city.lon
-            )
+            )*/
+
+            requireActivity().startService(Intent(requireContext(),DetailsService::class.java).apply {
+                putExtra(LON_KEY,it.city.lon)
+                putExtra(LAT_KEY,it.city.lat)
+            })
 
         }
     }
@@ -75,9 +100,6 @@ class DetailsFragment : Fragment(), OnServerResponse, OnServerResponseListener {
     companion object {
         @JvmStatic
         fun newInstance(bundle: Bundle): DetailsFragment {
-//            val fragment = DetailsFragment()
-//            fragment.arguments = bundle
-//            return fragment
             return DetailsFragment().apply { arguments = bundle }
         }
     }

@@ -14,10 +14,21 @@
         android:theme="@style/Theme.Weather">
 
 
-        <receiver android:name=".lesson6.MyBroadcastReceiver" />
+        <receiver
+            android:name=".lesson6.MyBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="Service broadcast channel" />
+            </intent-filter>
+
+        </receiver>
         <!--  -->
         <service android:name=".lesson6.MyService" />
         <service android:name=".lesson6.MainService" />
+        <service android:name=".view.details.DetailsService" />
 
 
         <activity
