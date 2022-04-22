@@ -11,7 +11,7 @@ import com.gb.weather.repository.OnServerResponseListener
 import com.gb.weather.repository.Weather
 import com.gb.weather.repository.WeatherLoader
 import com.gb.weather.repository.dto.WeatherDTO
-import com.gb.weather.utils.KEY_BUNDLE_WEATHER
+import com.gb.weather.utils.BUNDLE_WEATHER_KEY
 import com.gb.weather.utils.showSnackBar
 import com.gb.weather.viewmodel.ResponseState
 import com.google.android.material.snackbar.Snackbar
@@ -44,7 +44,7 @@ class DetailsFragment : Fragment(), OnServerResponse, OnServerResponseListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireArguments().getParcelable<Weather>(KEY_BUNDLE_WEATHER)?.let {
+        requireArguments().getParcelable<Weather>(BUNDLE_WEATHER_KEY)?.let {
             currentCityName = it.city.cityName
             WeatherLoader(this@DetailsFragment, this@DetailsFragment).loadWeather(
                 it.city.lat,

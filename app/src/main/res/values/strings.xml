@@ -11,4 +11,5 @@
     <string name="reload">Reload</string>
     <string name="threads">Threads</string>
     <string name="hard_work">Hard work</string>
+    <string name="exit">Exit</string>
 </resources>

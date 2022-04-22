@@ -7,5 +7,9 @@
         android:icon="@drawable/ic_thread"
         android:title="@string/threads"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/actionExit"
+        android:title="@string/exit"
+        app:showAsAction="always"/>
 
 </menu>

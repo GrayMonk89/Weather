@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import com.gb.weather.databinding.FragmentThreadsBinding
+import com.gb.weather.utils.MIL_SEC_TO_SEC_MULTIPLIER
 import java.lang.Thread.sleep
 
 class ThreadsFragment : Fragment() {
@@ -39,30 +39,29 @@ class ThreadsFragment : Fragment() {
         var counter = 0
         myEternalThread.start()
         with(binding) {
-            val timeRate = editTextRate.text.toString().toLong()
+            val periodOfTime = editTextRate.text.toString().toLong()
             calculationButton.setOnClickListener {
                 Thread {
-                    sleep(timeRate * 1000)
+                    sleep(periodOfTime * MIL_SEC_TO_SEC_MULTIPLIER)
                     requireActivity().runOnUiThread() {
-                        textViewResult.text = "hard work $timeRate seconds 1"
+                        textViewResult.text = "hard work $periodOfTime seconds"
                         createTextView("${Thread.currentThread().name} ${++counter}")
                     }
-                    Handler(Looper.getMainLooper()).post() {
+                    /*Handler(Looper.getMainLooper()).post() {
                         textViewResult.text = "hard work $timeRate seconds 2"
                         createTextView("${Thread.currentThread().name} ${++counter}")
-                    }
+                    }*/
                 }.start()
             }
 
             buttonEternalThread.setOnClickListener {
                 myEternalThread.mHandler?.post() {
-                    requireActivity().runOnUiThread() {
+                    /*requireActivity().runOnUiThread() {
                         textViewEternalThread.text = "hard work $timeRate seconds 1"
                         createTextView("${Thread.currentThread().name} ${++counter}")
-
-                    }
+                    }*/
                     Handler(Looper.getMainLooper()).post() {
-                        textViewEternalThread.text = "hard work $timeRate seconds 1"
+                        textViewEternalThread.text = "hard work $periodOfTime seconds"
                         createTextView("${Thread.currentThread().name} ${++counter}")
                     }
                 }

@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.gb.weather.R
 import com.gb.weather.databinding.FragmentWeatherListBinding
 import com.gb.weather.repository.Weather
-import com.gb.weather.utils.KEY_BUNDLE_WEATHER
+import com.gb.weather.utils.BUNDLE_WEATHER_KEY
 import com.gb.weather.view.details.DetailsFragment
 import com.gb.weather.viewmodel.AppState
 import com.gb.weather.viewmodel.MainViewModel
@@ -119,7 +119,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         val bundle = Bundle()
         requireActivity().supportFragmentManager.beginTransaction().add(
             R.id.mainContainer,
-            DetailsFragment.newInstance(bundle.apply { putParcelable(KEY_BUNDLE_WEATHER, weather) })
+            DetailsFragment.newInstance(bundle.apply { putParcelable(BUNDLE_WEATHER_KEY, weather) })
         ).addToBackStack("").commit()
     }
 }
