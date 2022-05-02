@@ -52,10 +52,7 @@ class WeatherLoader(
 
                 } else if (responseCode in RESPONSEOK) {
                     val buffer = BufferedReader(InputStreamReader(urlConnection.inputStream))
-                    val weatherDTO: WeatherDTO = Gson().fromJson(
-                        buffer,
-                        WeatherDTO::class.java
-                    )
+                    val weatherDTO: WeatherDTO = Gson().fromJson(buffer,WeatherDTO::class.java)
                     Handler(Looper.getMainLooper()).post {
                         onServerResponseListener.onResponse(weatherDTO)
                     }

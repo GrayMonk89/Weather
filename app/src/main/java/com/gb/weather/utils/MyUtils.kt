@@ -1,6 +1,10 @@
 package com.gb.weather.utils
 
 import android.view.View
+import com.gb.weather.repository.Weather
+import com.gb.weather.repository.dto.FactDTO
+import com.gb.weather.repository.dto.WeatherDTO
+import com.gb.weather.repository.getDefaultCity
 import com.google.android.material.snackbar.Snackbar
 
 fun View.showSnackBar(
@@ -12,6 +16,11 @@ fun View.showSnackBar(
     Snackbar.make(this, text, length).setAction(actionText, action).show()
 }
 
+
+fun convertDtoToModel(weatherDTO: WeatherDTO): Weather {
+    val fact: FactDTO = weatherDTO.factDTO
+    return (Weather(getDefaultCity(), fact.temperature, fact.feelsLike))
+}
 
 class MyUtils {
 

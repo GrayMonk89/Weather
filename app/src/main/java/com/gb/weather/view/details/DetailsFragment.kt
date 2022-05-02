@@ -1,30 +1,22 @@
-package com.gb.weather.view.details
+package com.gb.myapp
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.gb.weather.BuildConfig
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.gb.weather.databinding.FragmentDetailsBinding
-import com.gb.weather.repository.OnServerResponse
-import com.gb.weather.repository.OnServerResponseListener
 import com.gb.weather.repository.Weather
-import com.gb.weather.repository.dto.WeatherDTO
-import com.gb.weather.utils.*
-import com.gb.weather.viewmodel.ResponseState
+import com.gb.weather.utils.BUNDLE_WEATHER_KEY
+import com.gb.weather.utils.showSnackBar
+import com.gb.weather.viewmodel.DetailsState
+import com.gb.weather.viewmodel.DetailsViewModel
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_details.*
-import okhttp3.*
-import java.io.IOException
-import java.net.URL
 
-class DetailsFragment : Fragment(), OnServerResponse, OnServerResponseListener {
+class DetailsFragment : Fragment() {
 
     private var _binding: FragmentDetailsBinding? = null
     private val binding: FragmentDetailsBinding
@@ -36,17 +28,6 @@ class DetailsFragment : Fragment(), OnServerResponse, OnServerResponseListener {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-        requireContext().unregisterReceiver(receiver)
-    }
-
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            intent.let { intent ->
-                intent.getParcelableExtra<WeatherDTO>(SERVICE_BROADCAST_WEATHER_KEY)?.let {
-                    onResponse(it)
-                }
-            }
-        }
     }
 
     override fun onCreateView(
@@ -57,36 +38,28 @@ class DetailsFragment : Fragment(), OnServerResponse, OnServerResponseListener {
         return binding.root
     }
 
+    private val viewModel: DetailsViewModel by lazy {
+        ViewModelProvider(this).get(DetailsViewModel::class.java)
+    }
 
-    lateinit var currentCityName: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireContext().registerReceiver(
-            receiver,
-            IntentFilter(BROADCAST_RECEIVER_CHANNEL_WEATHER_KEY)
-        )
+        viewModel.getLiveData().observe(viewLifecycleOwner,object :Observer<DetailsState>{
+            override fun onChanged(t: DetailsState) {
+                renderData(t)
+            }
+
+        })
 
         requireArguments().getParcelable<Weather>(BUNDLE_WEATHER_KEY)?.let {
-            currentCityName = it.city.cityName
-/*            WeatherLoader(this@DetailsFragment, this@DetailsFragment).loadWeather(
-                it.city.lat,
-                it.city.lon
-            )*/
-
-            /*requireActivity().startService(Intent(requireContext(),DetailsService::class.java).apply {
-                putExtra(LON_KEY,it.city.lon)
-                putExtra(LAT_KEY,it.city.lat)
-            })*/
-
-            getWeather(it.city.lat, it.city.lon)
-
+            viewModel.getWeather(it.city)
         }
     }
 
 
-    private fun getWeather(lat: Double, lon: Double) {
+    /*private fun getWeather(lat: Double, lon: Double) {
         binding.loadingLayout.visibility = View.VISIBLE
 
         val client = OkHttpClient()
@@ -124,17 +97,27 @@ class DetailsFragment : Fragment(), OnServerResponse, OnServerResponseListener {
         //client.newCall(requestBuilder.build()).enqueue(callback)
         call.enqueue(callback)
 
-    }
+    }*/
 
-    private fun renderData(weather: WeatherDTO) {
-        with(binding) {
-            loadingLayout.visibility = View.GONE
-            cityName.text = currentCityName
-            temperatureValue.text = weather.factDTO.temperature.toString()
-            feelsLikeValue.text = weather.factDTO.feelsLike.toString()
-            cityCoordinates.text = "lat: ${weather.infoDTO.lat} lon: ${weather.infoDTO.lon}"
+    private fun renderData(detailsState: DetailsState) {
+
+        when(detailsState){
+            is DetailsState.Error -> TODO()
+            DetailsState.Loading -> TODO()
+            is DetailsState.Success -> {
+                val weather = detailsState.weather
+                with(binding) {
+                    loadingLayout.visibility = View.GONE
+                    cityName.text = weather.city.cityName
+                    temperatureValue.text = weather.temperature.toString()
+                    feelsLikeValue.text = weather.feelsLike.toString()
+                    cityCoordinates.text = "lat: ${weather.city.lat} lon: ${weather.city.lon}"
+                }
+                mainView.showSnackBar("Ура! Загрузилось!", "", {}, Snackbar.LENGTH_LONG)
+            }
         }
-        mainView.showSnackBar("Ура! Загрузилось!", "", {}, Snackbar.LENGTH_LONG)
+
+
 
     }
 
@@ -150,7 +133,7 @@ class DetailsFragment : Fragment(), OnServerResponse, OnServerResponseListener {
         }
     }
 
-    override fun onResponse(weatherDTO: WeatherDTO) {
+/*    override fun onResponse(weatherDTO: WeatherDTO) {
         renderData(weatherDTO)
     }
 
@@ -165,5 +148,5 @@ class DetailsFragment : Fragment(), OnServerResponse, OnServerResponseListener {
             mainView.showSnackBar(error.errorMessage, "", {}, Snackbar.LENGTH_LONG)
         }
 
-    }
+    }*/
 }
