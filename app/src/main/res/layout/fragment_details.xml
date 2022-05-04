@@ -15,25 +15,51 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/headerCityIcon"
+            android:id="@+id/headerCityIconGlide"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="@dimen/header_city_icon_height"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/headerCityIconPicasso"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/header_city_icon_height"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headerCityIconGlide"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/headerCityIconCoil"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/header_city_icon_height"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headerCityIconPicasso" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/headerCityIconCoilSVG"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/header_city_icon_height"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headerCityIconCoil" />
 
 
         <TextView
             android:id="@+id/cityName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/city_name_margin_top"
             android:textSize="35sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headerCityIconCoilSVG"
             tools:text="Москва" />
 
         <TextView
@@ -96,8 +122,8 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@+id/headerCityIconGlide"
             tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="112dp"
             tools:visibility="visible">
 
             <ProgressBar

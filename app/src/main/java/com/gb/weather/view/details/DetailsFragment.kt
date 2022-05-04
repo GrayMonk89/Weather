@@ -4,9 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import coil.Coil
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.load
+import coil.loadAny
+import coil.request.ImageRequest
 import com.bumptech.glide.Glide
 import com.gb.weather.databinding.FragmentDetailsBinding
 import com.gb.weather.repository.Weather
@@ -15,6 +22,7 @@ import com.gb.weather.utils.showSnackBar
 import com.gb.weather.viewmodel.DetailsState
 import com.gb.weather.viewmodel.DetailsViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_details.*
 
 class DetailsFragment : Fragment() {
@@ -77,13 +85,36 @@ class DetailsFragment : Fragment() {
                     temperatureValue.text = weather.temperature.toString()
                     feelsLikeValue.text = weather.feelsLike.toString()
                     cityCoordinates.text = "lat: ${weather.city.lat} lon: ${weather.city.lon}"
+
+
                     Glide.with(requireContext())
                         .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
-                        .into(headerCityIcon)
+                        .into(headerCityIconGlide)
+
+                    Picasso.get()
+                        ?.load("https://freepngimg.com/thumb/travel/30671-8-travel-clipart.png")
+                        ?.into(headerCityIconPicasso)
+
+                    headerCityIconCoil.load("https://freepngimg.com/thumb/city/36187-4-city-transparent-picture.png")
+
+                    headerCityIconCoilSVG.loadSvg("https://yastatic.net/weather/i/icons/blueye/color/svg/${weather.icon}.svg")
                 }
                 mainView.showSnackBar("Ура! Загрузилось!", "", {}, Snackbar.LENGTH_LONG)
             }
         }
+    }
+
+    private fun ImageView.loadSvg(url: String) {
+        val imageLoader = ImageLoader.Builder(this.context)
+            .componentRegistry { add(SvgDecoder(this@loadSvg.context)) }
+            .build()
+        val request = ImageRequest.Builder(this.context)
+            .crossfade(true)
+            .crossfade(500)
+            .data(url)
+            .target(this)
+            .build()
+        imageLoader.enqueue(request)
     }
 
     companion object {
