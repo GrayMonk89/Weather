@@ -8,11 +8,9 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import coil.Coil
 import coil.ImageLoader
 import coil.decode.SvgDecoder
 import coil.load
-import coil.loadAny
 import coil.request.ImageRequest
 import com.bumptech.glide.Glide
 import com.gb.weather.databinding.FragmentDetailsBinding
