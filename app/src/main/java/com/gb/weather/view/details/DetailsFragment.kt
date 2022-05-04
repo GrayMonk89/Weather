@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.gb.weather.databinding.FragmentDetailsBinding
 import com.gb.weather.repository.Weather
 import com.gb.weather.utils.BUNDLE_WEATHER_KEY
@@ -45,7 +46,7 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getLiveData().observe(viewLifecycleOwner,object :Observer<DetailsState>{
+        viewModel.getLiveData().observe(viewLifecycleOwner, object : Observer<DetailsState> {
             override fun onChanged(t: DetailsState) {
                 renderData(t)
             }
@@ -57,50 +58,9 @@ class DetailsFragment : Fragment() {
         }
     }
 
-
-    /*private fun getWeather(lat: Double, lon: Double) {
-        binding.loadingLayout.visibility = View.VISIBLE
-
-        val client = OkHttpClient()
-        val requestBuilder = Request.Builder()
-        requestBuilder.url("$YANDEX_DOMAIN_HARD_MODE_PART$YANDEX_ENDPOINT$LAT_KEY=$lat&$LON_KEY=$lon")
-        requestBuilder.addHeader(YANDEX_API_KEY, BuildConfig.WEATHER_API_KEY)
-        val request = requestBuilder.build()
-
-        val callback: Callback = object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                //mainView.let { Snackbar.make(it, "все плохо! $e", Snackbar.LENGTH_LONG).show() }
-                mainView.showSnackBar("все еще плохее! $e", "", {}, Snackbar.LENGTH_LONG)
-                binding.loadingLayout.visibility = View.GONE
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-
-                    //val serverResponse:String =
-
-                    val weatherDTO: WeatherDTO = Gson().fromJson(response.body()!!.string(),WeatherDTO::class.java)
-                    requireActivity().runOnUiThread{
-                        renderData(weatherDTO)
-                    }
-                } else{
-                    requireActivity().runOnUiThread{
-                        binding.loadingLayout.visibility = View.GONE
-                    }
-
-                }
-            }
-        }
-
-        val call = client.newCall(request)
-        //client.newCall(requestBuilder.build()).enqueue(callback)
-        call.enqueue(callback)
-
-    }*/
-
     private fun renderData(detailsState: DetailsState) {
 
-        when(detailsState){
+        when (detailsState) {
             is DetailsState.Error -> {
                 loadingLayout.visibility = View.GONE
                 mainView.showSnackBar(detailsState.error.toString(), "", {}, Snackbar.LENGTH_LONG)
@@ -117,6 +77,9 @@ class DetailsFragment : Fragment() {
                     temperatureValue.text = weather.temperature.toString()
                     feelsLikeValue.text = weather.feelsLike.toString()
                     cityCoordinates.text = "lat: ${weather.city.lat} lon: ${weather.city.lon}"
+                    Glide.with(requireContext())
+                        .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
+                        .into(headerCityIcon)
                 }
                 mainView.showSnackBar("Ура! Загрузилось!", "", {}, Snackbar.LENGTH_LONG)
             }

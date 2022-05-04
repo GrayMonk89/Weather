@@ -14,7 +14,7 @@ class DetailsRepositoryOkHttpImpl:DetailsRepository {
         val client = OkHttpClient()
         val requestBuilder = Request.Builder()
         requestBuilder.addHeader(YANDEX_API_KEY, BuildConfig.WEATHER_API_KEY)
-        requestBuilder.url("$YANDEX_DOMAIN_HARD_MODE_PART${YANDEX_ENDPOINT}lat=${city.lat}&lon=${city.lon}")//url("{$YANDEX_DOMAIN_PART}{$YANDEX_ENDPOINT}{$LAT_KEY}={$city.lat}&{$LON_KEY}={$city.lon}")
+        requestBuilder.url("$YANDEX_DOMAIN_HARD_MODE_PART${YANDEX_ENDPOINT}${LAT_KEY}=${city.lat}&${LON_KEY}=${city.lon}")//url("{$YANDEX_DOMAIN_PART}{$YANDEX_ENDPOINT}{$LAT_KEY}={$city.lat}&{$LON_KEY}={$city.lon}")
         val request = requestBuilder.build()
         val call = client.newCall(request)
         Thread{
