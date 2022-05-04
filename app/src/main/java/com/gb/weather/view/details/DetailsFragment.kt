@@ -101,9 +101,15 @@ class DetailsFragment : Fragment() {
     private fun renderData(detailsState: DetailsState) {
 
         when(detailsState){
-            is DetailsState.Error -> TODO()
-            DetailsState.Loading -> TODO()
+            is DetailsState.Error -> {
+                loadingLayout.visibility = View.GONE
+                mainView.showSnackBar(detailsState.error.toString(), "", {}, Snackbar.LENGTH_LONG)
+            }
+            DetailsState.Loading -> {
+                loadingLayout.visibility = View.VISIBLE
+            }
             is DetailsState.Success -> {
+                loadingLayout.visibility = View.GONE
                 val weather = detailsState.weather
                 with(binding) {
                     loadingLayout.visibility = View.GONE

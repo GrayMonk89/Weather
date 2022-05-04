@@ -14,7 +14,7 @@ fun getDefaultCity() = City("Москва", 55.75, 37.61)
 
 @Parcelize
 data class City(
-    val cityName: String,
+    var cityName: String,
     val lat: Double,
     val lon: Double) : Parcelable
 
@@ -42,5 +42,7 @@ fun getRussianCities(): List<Weather> = listOf(
         Weather(City("Челябинск", 55.1644419, 61.4368432), 13, 14),
         Weather(City("Омск", 54.9884804, 73.32423610000001), 15, 16),
         Weather(City("Ростов-на-Дону", 47.2357137, 39.701505), 17, 18),
-        Weather(City("Уфа", 54.7387621, 55.972055400000045), 19, 20)
+        Weather(City("Уфа", 54.7387621, 55.972055400000045), 19, 20),
+        Weather(City("Новочебоксарск", 56.111, 47.4776), -99, 99),
+        Weather(City("Чебоксары", 56.1322, 47.2519), -10, 10)
     )
