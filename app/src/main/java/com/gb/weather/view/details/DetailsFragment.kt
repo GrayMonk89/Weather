@@ -1,4 +1,4 @@
-package com.gb.myapp
+package com.gb.weather.view.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,7 +23,6 @@ class DetailsFragment : Fragment() {
         get() {
             return _binding!!
         }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -116,15 +115,7 @@ class DetailsFragment : Fragment() {
                 mainView.showSnackBar("Ура! Загрузилось!", "", {}, Snackbar.LENGTH_LONG)
             }
         }
-
-
-
     }
-
-    private fun showMessage(msg: String) {
-        Snackbar.make(binding.mainView, msg, Snackbar.LENGTH_LONG).show()
-    }
-
 
     companion object {
         @JvmStatic
@@ -133,20 +124,5 @@ class DetailsFragment : Fragment() {
         }
     }
 
-/*    override fun onResponse(weatherDTO: WeatherDTO) {
-        renderData(weatherDTO)
-    }
 
-    override fun onError(error: ResponseState) = when (error) {
-        is ResponseState.ErrorOnClientSide -> {
-            mainView.showSnackBar(error.errorMessage, "", {}, Snackbar.LENGTH_LONG)
-        }
-        is ResponseState.ErrorOnServerSide -> {
-            mainView.showSnackBar(error.errorMessage, "", {}, Snackbar.LENGTH_LONG)
-        }
-        is ResponseState.ErrorInJSONConversion -> {
-            mainView.showSnackBar(error.errorMessage, "", {}, Snackbar.LENGTH_LONG)
-        }
-
-    }*/
 }
