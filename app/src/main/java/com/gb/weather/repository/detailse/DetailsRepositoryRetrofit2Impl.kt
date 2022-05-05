@@ -2,6 +2,7 @@ package com.gb.weather.repository.detailse
 
 import android.util.Log
 import com.gb.weather.BuildConfig
+import com.gb.weather.MyApp
 import com.gb.weather.repository.weather.City
 import com.gb.weather.repository.weather.WeatherAPI
 import com.gb.weather.utils.LOG_KEY
@@ -16,10 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class DetailsRepositoryRetrofit2Impl : DetailsRepository {
     override fun getWeatherDetails(city: City, callbackDVM: DetailsViewModel.Callback) {
-        val weatherAPI = Retrofit.Builder().apply {
-            baseUrl(YANDEX_DOMAIN_HARD_MODE_PART)
-            addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
-        }.build().create(WeatherAPI::class.java)
+        val weatherAPI = MyApp.getWeatherAPI()
 
         Thread {
             try {

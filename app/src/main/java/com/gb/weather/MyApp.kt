@@ -4,6 +4,11 @@ import android.app.Application
 import androidx.room.Room
 import com.gb.weather.domain.room.HistoryDAO
 import com.gb.weather.domain.room.RoomDB
+import com.gb.weather.repository.weather.WeatherAPI
+import com.gb.weather.utils.YANDEX_DOMAIN_HARD_MODE_PART
+import com.google.gson.GsonBuilder
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MyApp : Application() {
     override fun onCreate() {
@@ -25,6 +30,13 @@ class MyApp : Application() {
                 }
             }
             return dataBase!!.historyDAO()
+        }
+
+        fun getWeatherAPI(): WeatherAPI{
+            return Retrofit.Builder().apply {
+                baseUrl(YANDEX_DOMAIN_HARD_MODE_PART)
+                addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
+            }.build().create(WeatherAPI::class.java)
         }
     }
 }
