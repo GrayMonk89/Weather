@@ -10,8 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.gb.weather.R
 import com.gb.weather.databinding.FragmentWeatherListBinding
-import com.gb.weather.repository.Weather
-import com.gb.weather.utils.BUNDLE_WEATHER_KEY
+import com.gb.weather.repository.weather.Weather
+import com.gb.weather.utils.*
 import com.gb.weather.view.details.DetailsFragment
 import com.gb.weather.viewmodel.AppState
 import com.gb.weather.viewmodel.MainViewModel
@@ -43,7 +43,6 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
     private var fromHere = true
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initRecycler()
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val observer = Observer<AppState> { data -> renderData(data, viewModel) }
@@ -55,9 +54,12 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         viewModel.getWeatherFromHere()
     }
 
+
     private fun initRecycler() {
         binding.listRecyclerView.also { it.adapter = adapter }
     }
+
+
 
     private fun redraw(viewModel: MainViewModel, redraw:Boolean) {
 

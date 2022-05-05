@@ -2,7 +2,10 @@ package com.gb.weather.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.gb.weather.repository.*
+import com.gb.weather.repository.detailse.DetailsRepository
+import com.gb.weather.repository.detailse.DetailsRepositoryRetrofit2Impl
+import com.gb.weather.repository.weather.City
+import com.gb.weather.repository.weather.Weather
 
 
 class DetailsViewModel(

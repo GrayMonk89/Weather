@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gb.weather.databinding.FragmentWeatherListRecyclerItemBinding
-import com.gb.weather.repository.Weather
+import com.gb.weather.repository.weather.Weather
 
 class WeatherListAdapter(
     private val onItemListClickListener: OnItemListClickListener,

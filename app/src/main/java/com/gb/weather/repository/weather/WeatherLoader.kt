@@ -1,20 +1,20 @@
-package com.gb.weather.repository
+package com.gb.weather.repository.weather
 
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.gb.weather.BuildConfig
+import com.gb.weather.repository.OnServerResponse
+import com.gb.weather.repository.OnServerResponseListener
 import com.gb.weather.repository.dto.WeatherDTO
 import com.gb.weather.utils.*
 import com.gb.weather.viewmodel.ResponseState
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import javax.net.ssl.HttpsURLConnection
 
 class WeatherLoader(
     private val onServerResponseListener: OnServerResponse,

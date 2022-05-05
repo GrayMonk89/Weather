@@ -14,7 +14,7 @@ import coil.load
 import coil.request.ImageRequest
 import com.bumptech.glide.Glide
 import com.gb.weather.databinding.FragmentDetailsBinding
-import com.gb.weather.repository.Weather
+import com.gb.weather.repository.weather.Weather
 import com.gb.weather.utils.BUNDLE_WEATHER_KEY
 import com.gb.weather.utils.showSnackBar
 import com.gb.weather.viewmodel.DetailsState

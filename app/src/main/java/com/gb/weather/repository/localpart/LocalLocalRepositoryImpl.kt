@@ -1,8 +1,8 @@
 package com.gb.weather.repository.localpart
 
-import com.gb.weather.repository.Weather
-import com.gb.weather.repository.getRussianCities
-import com.gb.weather.repository.getWorldCities
+import com.gb.weather.repository.weather.Weather
+import com.gb.weather.repository.weather.getRussianCities
+import com.gb.weather.repository.weather.getWorldCities
 
 class LocalLocalRepositoryImpl: LocalRepository {
     override fun getWorldWeatherFromLocalStorage():List<Weather> {

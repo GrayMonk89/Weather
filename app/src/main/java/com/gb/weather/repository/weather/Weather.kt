@@ -1,4 +1,4 @@
-package com.gb.weather.repository
+package com.gb.weather.repository.weather
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

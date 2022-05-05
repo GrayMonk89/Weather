@@ -1,19 +1,16 @@
-package com.gb.weather.repository
+package com.gb.weather.repository.detailse
 
 import android.util.Log
 import com.gb.weather.BuildConfig
-import com.gb.weather.repository.dto.WeatherDTO
+import com.gb.weather.repository.weather.City
+import com.gb.weather.repository.weather.WeatherAPI
 import com.gb.weather.utils.LOG_KEY
-import com.gb.weather.utils.MyUtils
 import com.gb.weather.utils.YANDEX_DOMAIN_HARD_MODE_PART
 import com.gb.weather.utils.convertDtoToModel
 import com.gb.weather.viewmodel.DetailsViewModel
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

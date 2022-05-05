@@ -1,6 +1,7 @@
-package com.gb.weather.repository
+package com.gb.weather.repository.detailse
 
 import com.gb.weather.BuildConfig
+import com.gb.weather.repository.weather.City
 import com.gb.weather.repository.dto.WeatherDTO
 import com.gb.weather.utils.*
 import com.gb.weather.viewmodel.DetailsViewModel
@@ -9,8 +10,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 
-class DetailsRepositoryOkHttpImpl:DetailsRepository {
-    override fun getWeatherDetails(city: City,callback: DetailsViewModel.Callback) {
+class DetailsRepositoryOkHttpImpl: DetailsRepository {
+    override fun getWeatherDetails(city: City, callback: DetailsViewModel.Callback) {
         val client = OkHttpClient()
         val requestBuilder = Request.Builder()
         requestBuilder.addHeader(YANDEX_API_KEY, BuildConfig.WEATHER_API_KEY)

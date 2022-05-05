@@ -1,6 +1,6 @@
 package com.gb.weather.viewmodel
 
-import com.gb.weather.repository.Weather
+import com.gb.weather.repository.weather.Weather
 
 sealed class AppState {
 

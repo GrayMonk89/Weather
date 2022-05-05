@@ -1,10 +1,10 @@
 package com.gb.weather.utils
 
 import android.view.View
-import com.gb.weather.repository.Weather
+import com.gb.weather.repository.weather.Weather
 import com.gb.weather.repository.dto.FactDTO
 import com.gb.weather.repository.dto.WeatherDTO
-import com.gb.weather.repository.getDefaultCity
+import com.gb.weather.repository.weather.getDefaultCity
 import com.google.android.material.snackbar.Snackbar
 
 fun View.showSnackBar(

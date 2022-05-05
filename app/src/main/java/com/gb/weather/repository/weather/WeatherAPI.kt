@@ -1,4 +1,4 @@
-package com.gb.weather.repository
+package com.gb.weather.repository.weather
 
 import com.gb.weather.repository.dto.WeatherDTO
 import com.gb.weather.utils.LAT_KEY

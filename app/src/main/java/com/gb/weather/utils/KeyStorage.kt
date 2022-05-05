@@ -26,12 +26,21 @@ const val SERVER_REPOSITORY_IMPL_SLEEP_TIME = 1500L
 const val MIL_SEC_TO_SEC_MULTIPLIER = 1000L
 const val CONNECT_TIMEOUT = 1000
 const val READ_TIMEOUT = 1000
+const val DEFAULT_VALUE_BOOLEAN_TRUE = true
+const val DEFAULT_VALUE_BOOLEAN_FALSE = false
 //endregion
 
 //region RestAPI
 val SERVER_SIDE = 500..599
 val CLIENT_SIDE = 400..499
 val RESPONSEOK = 200..299
+//endregion
+
+
+//region Shared preferences key
+const val PREFERENCE_KEY_FILE_NAME_SETTINGS = "application settings file name"
+const val PREFERENCE_KEY_FILE_NAME_SETTINGS_IS_RUSSIAN = "application settings is russian"
+
 //endregion
 
 class KeyStorage {
