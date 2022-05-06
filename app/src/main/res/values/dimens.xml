@@ -6,6 +6,7 @@
     <dimen name="feels_like_text_size">20sp</dimen>
     <dimen name="calculate_text_size">20sp</dimen>
     <dimen name="header_city_icon_height">100dp</dimen>
+    <dimen name="padding_start">20dp</dimen>
 
 
 </resources>

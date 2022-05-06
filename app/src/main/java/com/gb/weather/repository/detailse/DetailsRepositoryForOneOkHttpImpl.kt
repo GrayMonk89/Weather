@@ -10,7 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 
-class DetailsRepositoryOkHttpImpl: DetailsRepository {
+class DetailsRepositoryForOneOkHttpImpl: DetailsRepositoryForOne {
     override fun getWeatherDetails(city: City, callback: DetailsViewModel.Callback) {
         val client = OkHttpClient()
         val requestBuilder = Request.Builder()

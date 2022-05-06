@@ -10,6 +10,7 @@
     <string name="error">Error</string>
     <string name="reload">Reload</string>
     <string name="threads">Threads</string>
+    <string name="history">History</string>
     <string name="hard_work">Hard work</string>
     <string name="exit">Exit</string>
 </resources>
