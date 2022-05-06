@@ -1,5 +1,6 @@
 package com.gb.weather.utils
 
+import android.app.Application
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 
@@ -12,5 +13,8 @@ fun View.showSnackBar(
     Snackbar.make(this, text, length).setAction(actionText, action).show()
 }
 
+/*fun Application.isConnection(){
+
+}*/
 class ViewUtils {
 }

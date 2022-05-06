@@ -1,16 +1,19 @@
 package com.gb.weather
 
 import android.app.Application
-import android.util.Log
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.room.Room
 import com.gb.weather.domain.room.HistoryDAO
 import com.gb.weather.domain.room.RoomDB
 import com.gb.weather.repository.weather.WeatherAPI
-import com.gb.weather.utils.LOG_KEY
+import com.gb.weather.utils.DEFAULT_VALUE_BOOLEAN_FALSE
 import com.gb.weather.utils.YANDEX_DOMAIN_HARD_MODE_PART
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
 
 class MyApp : Application() {
     override fun onCreate() {
@@ -45,5 +48,22 @@ class MyApp : Application() {
             }.build().create(WeatherAPI::class.java)
             return weatherAPI
         }
+
+
+        fun isOnline(): Boolean {
+            val connectivityManager =
+                appContext!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                when {
+                    (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) -> return false
+                    (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) -> return true
+                    (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) -> return true
+                }
+            }
+            return false
+        }
+
     }
 }
