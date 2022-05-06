@@ -3,8 +3,12 @@ package com.gb.weather.view.historylist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import coil.ImageLoader
+import coil.decode.SvgDecoder
 import coil.load
+import coil.request.ImageRequest
 import com.gb.weather.databinding.FragmentHistoryWeatherListBinding
 import com.gb.weather.databinding.FragmentHistoryWeatherListRecyclerItemBinding
 import com.gb.weather.databinding.FragmentWeatherListRecyclerItemBinding
@@ -47,8 +51,23 @@ class HistoryWeatherListAdapter(
                 tvCityName.text = weather.city.cityName
                 tvTemperature.text = weather.temperature.toString()
                 tvFeelsLike.text = weather.feelsLike.toString()
-                ivIcon.load(weather.icon)
+                //ivIcon.load(weather.icon)
+                ivIcon.loadSvg("https://yastatic.net/weather/i/icons/blueye/color/svg/${weather.icon}.svg")
+
             }
+        }
+
+        private fun ImageView.loadSvg(url: String) {
+            val imageLoader = ImageLoader.Builder(this.context)
+                .componentRegistry { add(SvgDecoder(this@loadSvg.context)) }
+                .build()
+            val request = ImageRequest.Builder(this.context)
+                .crossfade(true)
+                .crossfade(500)
+                .data(url)
+                .target(this)
+                .build()
+            imageLoader.enqueue(request)
         }
     }
 }

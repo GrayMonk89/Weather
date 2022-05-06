@@ -11,16 +11,18 @@ import com.gb.weather.viewmodel.HistoryViewModel
 class DetailsRepositoryRoomImpl : DetailsRepositoryForOne, DetailsRepositoryForAll,
     DetailsRepositoryAdd {
     override fun getWeatherDetails(city: City, callback: DetailsViewModel.Callback) {
-        Thread{val weatherList = convertHistoryEntityToWeather(MyApp.getHistoryDAO().getHistoryForCity(city.cityName))
+        Thread{// Почему-то захотел сидеть в потоке
+            val weatherList = convertHistoryEntityToWeather(MyApp.getHistoryDAO().getHistoryForCity(city.cityName))
             if (weatherList.isEmpty()) {
                 callback.onFailure("У города ${city.cityName} нет истории запросов")
             } else {
                 callback.onResponse(weatherList.last())
-            }}.start()
+            }
+        }.start()
     }
 
     override fun getAllWeatherDetails(callback: HistoryViewModel.CallbackForAll) {
-        Thread {
+        Thread {// Почему-то захотел сидеть в потоке
             callback.onResponse(convertHistoryEntityToWeather(MyApp.getHistoryDAO().getAll()))
         }.start()
     }

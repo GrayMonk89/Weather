@@ -13,8 +13,5 @@ fun View.showSnackBar(
     Snackbar.make(this, text, length).setAction(actionText, action).show()
 }
 
-/*fun Application.isConnection(){
-
-}*/
 class ViewUtils {
 }

@@ -7,6 +7,5 @@
     <dimen name="calculate_text_size">20sp</dimen>
     <dimen name="header_city_icon_height">100dp</dimen>
     <dimen name="padding_start">20dp</dimen>
-
-
+    <dimen name="weather_icon_size">55dp</dimen>
 </resources>
