@@ -23,12 +23,15 @@ import kotlin.properties.Delegates
 
 class WeatherListFragment : Fragment(), OnItemListClickListener {
 
+/*    val sp = */
+
+    private var fromHere = DEFAULT_VALUE_BOOLEAN_FALSE
+
     private val adapter = WeatherListAdapter(this)
 
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
-
 
     private var _binding: FragmentWeatherListBinding? = null
     private val binding: FragmentWeatherListBinding
@@ -45,12 +48,14 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        fromHere = requireActivity().getSharedPreferences(PREFERENCE_KEY_FILE_NAME_SETTINGS, Context.MODE_PRIVATE)
+            .getBoolean(PREFERENCE_KEY_FILE_NAME_SETTINGS_IS_RUSSIAN, DEFAULT_VALUE_BOOLEAN_FALSE)
         _binding = FragmentWeatherListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     /*DEFAULT_VALUE_BOOLEAN_TRUE*/
-    private var fromHere = false
+
 //        requireActivity().getSharedPreferences(
 //        PREFERENCE_KEY_FILE_NAME_SETTINGS,
 //        Context.MODE_PRIVATE
@@ -60,13 +65,14 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         initRecycler()
-        //val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
+        redraw(viewModel, false)
 
         binding.floatingActionButton.setOnClickListener {
             redraw(viewModel, true)
         }
-        viewModel.getWeatherFromHere()
+
+        //viewModel.getWeatherFromHere()
     }
 
 
