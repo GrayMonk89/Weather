@@ -6,16 +6,21 @@
         android:id="@+id/actionHistory"
         android:icon="@drawable/ic_history"
         android:title="@string/threads"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/actionThreads"
         android:icon="@drawable/ic_thread"
         android:title="@string/threads"
         app:showAsAction="always" />
     <item
+        android:id="@+id/actionWorkWithContentProvider"
+        android:icon="@drawable/ic_cp"
+        android:title="@string/content_provider"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/actionExit"
         android:icon="@drawable/ic_exit"
         android:title="@string/exit"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
 </menu>

@@ -3,14 +3,20 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="click">Click</string>
-
     <string name="temperature_label">Температура</string>
     <string name="feels_like_label">Ощущается как</string>
     <string name="city_coordinates">lt/ln: %s, %s"</string>
     <string name="error">Error</string>
     <string name="reload">Reload</string>
     <string name="threads">Threads</string>
+    <string name="content_provider">Content Provider</string>
     <string name="history">History</string>
     <string name="hard_work">Hard work</string>
     <string name="exit">Exit</string>
+    <string name="access_to_contacts">"Доступ к контактам"</string>
+    <string name="explain">"Объяснение для глупого пользователя"</string>
+    <string name="access_granted">"Предоставить доступ"</string>
+    <string name="denial">"Отказаться"</string>
+
+
 </resources>

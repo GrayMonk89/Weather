@@ -12,6 +12,7 @@ import com.gb.weather.R
 import com.gb.weather.lesson6.MainService
 import com.gb.weather.lesson6.MyBroadcastReceiver
 import com.gb.weather.lesson6.ThreadsFragment
+import com.gb.weather.lesson9.ContentProviderFragment
 import com.gb.weather.utils.*
 import com.gb.weather.view.historylist.HistoryWeatherListFragment
 import com.gb.weather.view.weatherlist.WeatherListFragment
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(BROADCAST_RECEIVER_CHANNEL_KEY))
 /*        LocalBroadcastManager.getInstance(this)
             .registerReceiver(receiver, IntentFilter(BROADCAST_RECEIVER_CHANNEL_KEY))*/
-        Thread{MyApp.getHistoryDAO().getAll()}.start()
+        Thread { MyApp.getHistoryDAO().getAll() }.start()
 
 
     }
@@ -59,6 +60,13 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.mainContainer, ThreadsFragment.newInstance())
+                    .addToBackStack("")
+                    .commit()
+            }
+            (R.id.actionWorkWithContentProvider) -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.mainContainer, ContentProviderFragment.newInstance())
                     .addToBackStack("")
                     .commit()
             }
