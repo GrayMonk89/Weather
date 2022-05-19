@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import com.gb.weather.R
 import com.gb.weather.databinding.FragmentContentProviderBinding
 import com.gb.weather.utils.REQUEST_CODE
+import java.lang.StringBuilder
 
 class ContentProviderFragment : Fragment() {
 
@@ -96,7 +97,6 @@ class ContentProviderFragment : Fragment() {
 
     private fun getContacts() {
         val contentResolver: ContentResolver = requireContext().contentResolver
-
         val cursor = contentResolver.query(
             ContactsContract.Contacts.CONTENT_URI,
             null,
