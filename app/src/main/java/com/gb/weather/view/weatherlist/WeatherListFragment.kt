@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -20,6 +21,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.gb.weather.R
 import com.gb.weather.databinding.FragmentWeatherListBinding
+import com.gb.weather.repository.weather.City
 import com.gb.weather.repository.weather.Weather
 import com.gb.weather.utils.*
 import com.gb.weather.view.details.DetailsFragment
@@ -65,12 +67,6 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         return binding.root
     }
 
-    /*DEFAULT_VALUE_BOOLEAN_TRUE*/
-
-//        requireActivity().getSharedPreferences(
-//        PREFERENCE_KEY_FILE_NAME_SETTINGS,
-//        Context.MODE_PRIVATE
-//    ).getBoolean(PREFERENCE_KEY_FILE_NAME_SETTINGS_IS_RUSSIAN, DEFAULT_VALUE_BOOLEAN_TRUE)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -139,7 +135,6 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
         ) {
             getLocation()
         } else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
-            // важно написать убедительную просьбу
             explainToAFool()
         } else {
             mRequestPermission()
@@ -153,21 +148,84 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 //val providerGPS = locationManager.getProvider(LocationManager.GPS_PROVIDER)
                 val providerGPS = locationManager.getProvider(LocationManager.GPS_PROVIDER)
+//                providerGPS?.let {
+//                    locationManager.requestLocationUpdates(
+//                        LocationManager.GPS_PROVIDER,
+//                        10000L,
+//                        0f,
+//                        locationListenerTime
+//                    )
+//                }
                 providerGPS?.let {
                     locationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER,
-                        10000L,
+                        0,
                         100f,
-                        locationListener
+                        locationListenerDistance
                     )
                 }
             }
         }
     }
 
-    private val locationListener = object : LocationListener {
+    fun getAddressByLocation(location: Location) {
+        val geocoder = Geocoder(requireContext())
+        val timeStump = System.currentTimeMillis()
+        Thread {
+            val addressText = geocoder.getFromLocation(
+                location.latitude,
+                location.longitude,
+                1000000
+            )[0].getAddressLine(0)
+            requireActivity().runOnUiThread {
+                showAddressDialog(addressText, location)
+            }
+        }.start()
+        Log.d(LOG_KEY, " прошло ${System.currentTimeMillis() - timeStump}")
+    }
+
+    private fun showAddressDialog(address: String, location: Location) {
+        activity?.let {
+            AlertDialog.Builder(it)
+                .setTitle(getString(R.string.dialog_address_title))
+                .setMessage(address)
+                .setPositiveButton(getString(R.string.dialog_address_get_weather)) { _, _ ->
+                    onItemClick(
+                        Weather(
+                            City(
+                                address,
+                                location.latitude,
+                                location.longitude
+                            )
+                        )
+                    )
+                }
+                .setNegativeButton(getString(R.string.dialog_button_close)) { dialog, _ -> dialog.dismiss() }
+                .create()
+                .show()
+        }
+    }
+
+    private val locationListenerTime = object : LocationListener {
         override fun onLocationChanged(location: Location) {
-            Log.d("@@@", location.toString())
+            Log.d(LOG_KEY, location.toString())
+            getAddressByLocation(location)
+        }
+
+        override fun onProviderDisabled(provider: String) {
+            super.onProviderDisabled(provider)
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            super.onProviderEnabled(provider)
+        }
+
+    }
+
+    private val locationListenerDistance = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            Log.d(LOG_KEY, location.toString())
+            getAddressByLocation(location)
         }
 
         override fun onProviderDisabled(provider: String) {
@@ -211,7 +269,6 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
                     explainToAFool()
                 }
             }
-
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
