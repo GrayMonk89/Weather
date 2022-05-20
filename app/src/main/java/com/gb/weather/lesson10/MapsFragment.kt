@@ -38,6 +38,7 @@ class MapsFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+
     }
 
     private val callback = OnMapReadyCallback { googleMap ->
