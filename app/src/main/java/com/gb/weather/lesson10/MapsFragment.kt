@@ -70,7 +70,7 @@ class MapsFragment : Fragment() {
                    shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
             explainToAFool()
         } else {
-            map.isMyLocationEnabled = true
+            //map.isMyLocationEnabled = true
         }
 
 
@@ -154,7 +154,7 @@ class MapsFragment : Fragment() {
             for (i in permissions.indices) {
                 if (permissions[i] == Manifest.permission.ACCESS_FINE_LOCATION && grantResults[i] == PackageManager.PERMISSION_GRANTED||
                     permissions[i] == Manifest.permission.ACCESS_COARSE_LOCATION && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    map.isMyLocationEnabled = true
+                    //map.isMyLocationEnabled = true
                 } else {
                     explainToAFool()
                 }
