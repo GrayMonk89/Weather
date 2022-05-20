@@ -29,11 +29,10 @@ import com.gb.weather.view.details.DetailsFragment
 import com.gb.weather.viewmodel.AppState
 import com.gb.weather.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
 import kotlin.properties.Delegates
 
 class WeatherListFragment : Fragment(), OnItemListClickListener {
-
-/*    val sp = */
 
     private var fromHere = DEFAULT_VALUE_BOOLEAN_FALSE
 
@@ -169,7 +168,8 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
     }
 
     fun getAddressByLocation(location: Location) {
-        val geocoder = Geocoder(requireContext())
+        //val geocoder = Geocoder(requireContext())
+        val geocoder = Geocoder(requireContext(), Locale("ru","RU"))
         val timeStump = System.currentTimeMillis()
         Thread {
             val addressText = geocoder.getFromLocation(

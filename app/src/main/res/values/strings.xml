@@ -9,6 +9,7 @@
     <string name="error">Error</string>
     <string name="reload">Reload</string>
     <string name="threads">Threads</string>
+    <string name="map">Map</string>
     <string name="content_provider">Content Provider</string>
     <string name="history">History</string>
     <string name="hard_work">Hard work</string>
@@ -30,6 +31,7 @@
     <string name="dialog_rationale_decline">Не надо</string>
     <string name="dialog_address_title">Ваш адрес</string>
     <string name="dialog_address_get_weather">Узнать погоду</string>
+    <string name="button_search_map">Search map</string>
 
 
 </resources>

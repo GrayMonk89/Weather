@@ -9,6 +9,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.gb.weather.MyApp
 import com.gb.weather.R
+import com.gb.weather.lesson10.MapsFragment
 import com.gb.weather.lesson6.MainService
 import com.gb.weather.lesson6.MyBroadcastReceiver
 import com.gb.weather.lesson6.ThreadsFragment
@@ -67,6 +68,13 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.mainContainer, ContentProviderFragment.newInstance())
+                    .addToBackStack("")
+                    .commit()
+            }
+            (R.id.actionGoToTheMap) -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.mainContainer, MapsFragment())
                     .addToBackStack("")
                     .commit()
             }
