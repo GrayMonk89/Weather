@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.*
 
 class MapsFragment : Fragment() {
 
+
     private lateinit var map: GoogleMap
     private val markers: ArrayList<Marker> = arrayListOf()
     private var _binding: FragmentMapsMainBinding? = null
