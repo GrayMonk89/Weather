@@ -133,7 +133,7 @@ class WeatherListFragment : Fragment(), OnItemListClickListener {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             getLocation()
-        } else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
             explainToAFool()
         } else {
             mRequestPermission()
