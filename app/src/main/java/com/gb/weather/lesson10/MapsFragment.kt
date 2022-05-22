@@ -1,29 +1,31 @@
 package com.gb.weather.lesson10
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
-import androidx.fragment.app.Fragment
-
+import android.location.Geocoder
 import android.os.Bundle
+import android.view.InputDevice
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.text.isDigitsOnly
+import androidx.fragment.app.Fragment
 import com.gb.weather.R
-import com.gb.weather.databinding.FragmentMapsBinding
 import com.gb.weather.databinding.FragmentMapsMainBinding
 import com.gb.weather.utils.REQUEST_CODE_LOCATION
-
+import com.gb.weather.utils.showSnackBar
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import java.lang.NullPointerException
+import java.util.*
 
 class MapsFragment : Fragment() {
 
@@ -51,8 +53,9 @@ class MapsFragment : Fragment() {
             addMarkerToArray(it)
             drawLine()
         }
+
         map.setOnMyLocationClickListener {
-            
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(default, 7f))
         }
 
         map.uiSettings.isZoomControlsEnabled = true
@@ -67,8 +70,9 @@ class MapsFragment : Fragment() {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             mRequestPermission()
-        } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)||
-                   shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) ||
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
+        ) {
             explainToAFool()
         } else {
             map.isMyLocationEnabled = true
@@ -125,6 +129,41 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+        searchButtonInit()
+    }
+
+    private fun searchButtonInit() {
+        binding.buttonSearch.setOnClickListener {
+            val searchText = binding.searchAddress.text.toString()
+            val geocoder = Geocoder(requireContext(), Locale.getDefault())
+            if (!searchText.isDigitsOnly() && searchText.isNotEmpty()) {
+                try {
+                    val latLon = LatLng(
+                        geocoder.getFromLocationName(searchText, 1)[0].latitude,
+                        geocoder.getFromLocationName(searchText, 1)[0].longitude
+                    )
+                    map.addMarker(
+                        MarkerOptions().position(latLon)
+                            .title(searchText)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_marker))
+                    )
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLon, 7f))
+
+                } catch (e: IndexOutOfBoundsException) {
+                    view?.showSnackBar("Беда. Не нужно вводить фигню! $e", "", {})
+                }
+            } else {
+                view?.showSnackBar("Беда. Не нужно вводить фигню", "", {})
+            }
+            binding.buttonSearch.hideKeyboard()
+        }
+    }
+
+    private fun View.hideKeyboard() {// как вынести этот метод например в ViewUtils
+        (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            windowToken,
+            0
+        )
     }
 
     private fun explainToAFool() {
@@ -141,7 +180,10 @@ class MapsFragment : Fragment() {
 
     private fun mRequestPermission() {
         requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE_LOCATION)
-        requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_CODE_LOCATION)
+        requestPermissions(
+            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+            REQUEST_CODE_LOCATION
+        )
     }
 
     override fun onRequestPermissionsResult(
@@ -153,8 +195,9 @@ class MapsFragment : Fragment() {
         if (requestCode == REQUEST_CODE_LOCATION) {
 
             for (i in permissions.indices) {
-                if (permissions[i] == Manifest.permission.ACCESS_FINE_LOCATION && grantResults[i] == PackageManager.PERMISSION_GRANTED||
-                    permissions[i] == Manifest.permission.ACCESS_COARSE_LOCATION && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                if (permissions[i] == Manifest.permission.ACCESS_FINE_LOCATION && grantResults[i] == PackageManager.PERMISSION_GRANTED ||
+                    permissions[i] == Manifest.permission.ACCESS_COARSE_LOCATION && grantResults[i] == PackageManager.PERMISSION_GRANTED
+                ) {
                     map.isMyLocationEnabled = true
                 } else {
                     explainToAFool()

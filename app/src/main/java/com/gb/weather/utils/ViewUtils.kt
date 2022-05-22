@@ -1,6 +1,5 @@
 package com.gb.weather.utils
 
-import android.app.Application
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 
