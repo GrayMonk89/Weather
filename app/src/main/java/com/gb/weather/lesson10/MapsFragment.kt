@@ -4,8 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
-import android.view.InputDevice
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,14 +17,17 @@ import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import com.gb.weather.R
 import com.gb.weather.databinding.FragmentMapsMainBinding
+import com.gb.weather.repository.weather.City
+import com.gb.weather.repository.weather.Weather
+import com.gb.weather.utils.BUNDLE_WEATHER_KEY
 import com.gb.weather.utils.REQUEST_CODE_LOCATION
 import com.gb.weather.utils.showSnackBar
+import com.gb.weather.view.details.DetailsFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import java.lang.NullPointerException
 import java.util.*
 
 class MapsFragment : Fragment() {
@@ -58,6 +61,32 @@ class MapsFragment : Fragment() {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(default, 7f))
         }
 
+        fun getAddressByLocation(location: LatLng): String {
+            val geocoder = Geocoder(requireContext(), Locale.getDefault())
+            val addressText = geocoder.getFromLocation(
+                location.latitude,
+                location.longitude,
+                1000000
+            )[0].getAddressLine(0)
+            return addressText
+        }
+
+
+        map.setOnMapClickListener {
+            val weather = Weather(city = City(getAddressByLocation(it), it.latitude, it.longitude))
+            requireActivity().supportFragmentManager.beginTransaction().add(
+                R.id.mainContainer,
+                DetailsFragment.newInstance(Bundle().apply {
+                    putParcelable(
+                        BUNDLE_WEATHER_KEY,
+                        weather
+                    )
+                })
+            ).addToBackStack("").commit()
+        }
+
+
+
         map.uiSettings.isZoomControlsEnabled = true
         map.uiSettings.isMyLocationButtonEnabled = true
 
@@ -80,6 +109,7 @@ class MapsFragment : Fragment() {
 
 
     }
+
 
     private fun addMarkerToArray(location: LatLng) {
         val marker = setMarker(location, markers.size.toString(), R.drawable.ic_map_pin)

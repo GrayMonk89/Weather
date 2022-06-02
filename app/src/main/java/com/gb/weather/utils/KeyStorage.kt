@@ -42,6 +42,17 @@ const val PREFERENCE_KEY_FILE_NAME_SETTINGS = "application settings file name"
 const val PREFERENCE_KEY_FILE_NAME_SETTINGS_IS_RUSSIAN = "application settings is russian"
 //endregion
 
+//region push
+ const val NOTIFICATION_ID_LOW = 1
+ const val NOTIFICATION_TITLE_LOW = "NOTIFICATION LOW"
+ const val NOTIFICATION_TEXT_LOW = "TEXT LOW"
+ const val NOTIFICATION_ID_HIGH = 2
+ const val NOTIFICATION_TITLE_HIGH = "NOTIFICATION HIGH"
+ const val NOTIFICATION_TEXT_HIGH = "TEXT HIGH"
+ const val CHANNEL_ID_LOW = "channel_id_1"
+ const val CHANNEL_ID_HIGH = "channel_id_2"
+//endregion
+
 const val REQUEST_CODE = 999
 const val REQUEST_CODE_LOCATION = 998
 
