@@ -4,6 +4,10 @@ package com.gb.weather.utils
 const val BUNDLE_WEATHER_KEY = "key bundle weather"
 const val LOG_KEY = "(╯°□°)╯┻━━┻"
 const val LOG_KEY_SECOND = "@@@"
+const val LOG_KEY_PUSH = "mylogs_push"
+const val KEY_TITLE = "myTitle"
+const val KEY_MESSAGE = "myMessage"
+
 const val MAIN_ACTIVITY_KEY = "MainActivity key"
 const val MAIN_SERVICE_KEY = "MainService key"
 const val BROADCAST_RECEIVER_CHANNEL_KEY = "Service broadcast channel"
